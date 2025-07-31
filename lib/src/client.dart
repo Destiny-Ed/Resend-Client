@@ -1,21 +1,19 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:resend_client/src/utils.dart';
 import 'models.dart';
 import 'exceptions.dart';
 
 /// Client for interacting with the Resend Email API.
 class ResendClient {
   final String apiKey;
-  final String baseUrl;
-  final http.Client _client;
 
   /// Creates a [ResendClient] with a required [apiKey].
-  /// Optionally accepts a [baseUrl] (defaults to Resend API endpoint) and a custom [client].
-  ResendClient({
-    required this.apiKey,
-    this.baseUrl = 'https://api.resend.com',
-    http.Client? client,
-  }) : _client = client ?? http.Client();
+  /// Optionally accepts a [baseUrl] (defaults to Resend API endpoint) .
+  ResendClient({required this.apiKey});
+
+  // Creates a variable for [client]
+  final _client = http.Client();
 
   /// Sends a single email using the Resend API.
   ///
@@ -90,7 +88,7 @@ class ResendClient {
       );
       return _handleResponse(response);
     } catch (e) {
-      throw ResendException('Network error: $e');
+      throw ResendException('$e');
     }
   }
 
@@ -104,7 +102,7 @@ class ResendClient {
       );
       return _handleResponse(response);
     } catch (e) {
-      throw ResendException('Network error: $e');
+      throw ResendException('$e');
     }
   }
 
