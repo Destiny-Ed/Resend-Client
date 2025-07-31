@@ -124,23 +124,11 @@ class ResendClient {
     if (response.statusCode == 200 || response.statusCode == 201) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     }
-    switch (response.statusCode) {
-      case 400:
-        throw ResendException('Bad request: ${response.body}', statusCode: 400);
-      case 401:
-        throw ResendException('Missing API key', statusCode: 401);
-      case 403:
-        throw ResendException('Invalid API key', statusCode: 403);
-      case 404:
-        throw ResendException('Resource not found', statusCode: 404);
-      case 429:
-        throw ResendRateLimitException('Rate limit exceeded', statusCode: 429);
-      default:
-        throw ResendException(
-          'Server error: ${response.body}',
-          statusCode: response.statusCode,
-        );
-    }
+    final errorResponse = (jsonDecode(response.body) as Map<String, dynamic>);
+    throw ResendException(
+      errorResponse["error"] ?? "",
+      statusCode: errorResponse["statusCode"] ?? 0,
+    );
   }
 
   /// Headers for API requests.
